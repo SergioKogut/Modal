@@ -4,13 +4,14 @@ import { hideModal, setMessage } from '../reducers/modal';
 
 class Modal extends Component {
     state = {
-
+            modal:{
             message: "your message",
             urlLink: "https://c.static-nike.com/a/images/t_PDP_1280_v1/f_auto/o85c1zecmrsre8qbf7pc/fe-nom-girls-sculpt-bra-q6FG9l.jpg"
+        }
     }
 
     handleChangeText = (e) => {
-        this.setState({ message: e.target.value });
+        this.setState({ modal:  { message: e.target.value } });
     }
     handleChangePhoto = (e) => {
         this.setState({ urlLink: e.target.value });
