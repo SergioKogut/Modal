@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import Home from './components/Home';
 import Register from './components/register';
 import LoginPage from './components/LoginPage';
+import AnimalWidget from './components/animal'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route exact path='/' component={Home} />
       <Route exact path='/register' component={Register} />
       <Route exact path='/login' component={LoginPage} />
+      <Route exact path='/animal' component={AnimalWidget} />
       </Switch>
     </Layout>
     

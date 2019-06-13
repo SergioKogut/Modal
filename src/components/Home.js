@@ -6,6 +6,7 @@ import Notifications, { notify } from '../components/Notifications'
 import Modal from './Modal';
 import './modal.css'
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 const ButtonStyle = {
     'marginRight': "10px",
@@ -57,7 +58,7 @@ class Home extends Component {
     render() {
 
         console.log('------- Home props------', this.props);
-        const { count,isShowModal,modalMessage } = this.props;
+        const { count,isShowModal,modalMessage,urlLink } = this.props;
         const {valueAdd, textMessage, colorId } = this.state;
         return (
             <div>
@@ -148,7 +149,7 @@ class Home extends Component {
                                     data-toggle="tooltip"
                                     title="Click for see notice!"
                                     style={ButtonRoundStyle}>
-                                    Click me
+                                    <i className="fa fa-hand-o-down" aria-hidden="true"></i> Click me
                 </button>
                             </div>
                         </div>
@@ -162,7 +163,7 @@ class Home extends Component {
                         <div className="row">
                             <div className="col-sm-3 ">
                                 <div className={classnames('custommodal position-center', { 'open': isShowModal })}>
-                                    <Modal callBackClose={this.btnCloseDialog} />
+                                    <Modal/>
                                 </div>
                                 <br />
                                 <button
@@ -172,7 +173,13 @@ class Home extends Component {
                                     Modal show
                                 </button>
                             </div>
-                            <div className="col-sm-9 ">
+                            <div className="col-sm-2 ">
+                                <div className="form-group">
+                                    <label htmlFor="photo">Photo:</label> 
+                                    <img id='photo'  src={urlLink} style={{'borderWidth':'2px','height':'135px','width':'100px'}}></img>
+                                </div>
+                            </div>
+                            <div className="col-sm-6 ">
                                 <div className="form-group">
                                     <label htmlFor="comment">Comment:</label>
                                     <textarea
@@ -192,14 +199,30 @@ class Home extends Component {
     }
 }
 
+
 const mapStateProps = (state) => {
     console.log('----redux store connect----', state);
     return {
         count: state.counter.counterStore,
         isShowModal:state.modal.showModalWindow,
-        modalMessage:state.modal.messageStore
+        modalMessage:state.modal.modalWindow.message,
+        urlLink:state.modal.modalWindow.urlLink
     };
 }
+
+Home.propTypes =
+    {
+        urlLink:PropTypes.string.isRequired,
+        count:PropTypes.number.isRequired,
+        isShowModal:PropTypes.bool.isRequired,
+        modalMessage:PropTypes.string.isRequired,
+        increment: PropTypes.func.isRequired,
+        decrement: PropTypes.func.isRequired,
+        incrementValue: PropTypes.func.isRequired,
+        decrementValue: PropTypes.func.isRequired,
+        showModal: PropTypes.func.isRequired,
+        hideModal: PropTypes.func.isRequired,
+    }
 
 export default connect(mapStateProps, { 
     increment,

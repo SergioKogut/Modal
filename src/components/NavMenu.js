@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class NavMenu extends Component {
     state = {}
@@ -18,12 +18,15 @@ class NavMenu extends Component {
                                     <Link className="text-dark nav-link" to="/">Home</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="text-dark nav-link" to="/register">Register</Link>  
+                                    <Link className="text-dark nav-link" to="/register">Register</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="text-dark nav-link" to="/login">Login</Link>  
+                                    <Link className="text-dark nav-link" to="/login">Login</Link>
                                 </li>
 
+                                <li className="nav-item">
+                                    <Link className="text-dark nav-link" to="/animal">Тварини</Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
