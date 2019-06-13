@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { increment, decrement, incrementValue, decrementValue } from '../reducers/counter';
+import { showModal, hideModal } from '../reducers/modal';
 import Notifications, { notify } from '../components/Notifications'
 import Modal from './Modal';
 import './modal.css'
@@ -29,8 +30,8 @@ class Home extends Component {
     state = {
         valueAdd: 10,
         textMessage: 'Hello anonim!',
-        colorId: '#20c997',
-        isShowModal: false
+        colorId: '#20c997'
+        //isShowModal: false
     }
 
     handleChange = (e) => {
@@ -56,8 +57,8 @@ class Home extends Component {
     render() {
 
         console.log('------- Home props------', this.props);
-        const { count } = this.props;
-        const { isShowModal, valueAdd, textMessage, colorId } = this.state;
+        const { count,isShowModal,modalMessage } = this.props;
+        const {valueAdd, textMessage, colorId } = this.state;
         return (
             <div>
 
@@ -116,7 +117,7 @@ class Home extends Component {
                     <h4 className="card-title">Notification (вспливаюче віконце )</h4>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-sm-9 ">
+                            <div className="col-sm-6 ">
                                 <div className="input-group mb-2 input-group-lg">
                                     <div className="input-group-prepend" >
                                         <span className="input-group-text" >Enter message:</span>
@@ -144,6 +145,8 @@ class Home extends Component {
                             <div className="col-sm-3 ">
                                 <button className="btn btn-success"
                                     onClick={() => notify(textMessage, colorId)}
+                                    data-toggle="tooltip"
+                                    title="Click for see notice!"
                                     style={ButtonRoundStyle}>
                                     Click me
                 </button>
@@ -165,14 +168,20 @@ class Home extends Component {
                                 <button
                                     className="btn btn-info"
                                     style={ButtonRoundStyle}
-                                    onClick={this.btnToggleModalClick}>
+                                    onClick={() => this.props.showModal()}>
                                     Modal show
                                 </button>
                             </div>
                             <div className="col-sm-9 ">
                                 <div className="form-group">
                                     <label htmlFor="comment">Comment:</label>
-                                    <textarea className="form-control" rows="5" id="comment"></textarea>
+                                    <textarea
+                                    className="form-control"
+                                    rows="5"
+                                    id="comment"
+                                    readOnly
+                                    value={modalMessage}
+                                    ></textarea>
                                 </div>
                             </div>
                         </div>
@@ -186,8 +195,16 @@ class Home extends Component {
 const mapStateProps = (state) => {
     console.log('----redux store connect----', state);
     return {
-        count: state.counter.counterStore
+        count: state.counter.counterStore,
+        isShowModal:state.modal.showModalWindow,
+        modalMessage:state.modal.messageStore
     };
 }
 
-export default connect(mapStateProps, { increment, decrement, incrementValue, decrementValue })(Home);
+export default connect(mapStateProps, { 
+    increment,
+    decrement,
+    incrementValue,
+    decrementValue,
+    showModal,
+    hideModal })(Home);

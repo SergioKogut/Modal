@@ -6,6 +6,9 @@
     position: fixed;
     top: 0;
     width: 100%;
+    -webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
     }
     .custommodal.open {
     display: block;
@@ -21,4 +24,15 @@
     }
     .custommodal .position-center i {
     font-size: 150px;
+    }
+
+    .md-effect-1 .modal-body {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -ms-transform: scale(0.7);
+        transform: scale(0.7);
+        opacity: 0;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
     }

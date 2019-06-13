@@ -1,34 +1,47 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { hideModal, setMessage } from '../reducers/modal';
 
 class Modal extends Component {
     state = {
+        message:""
+    }
+
+    handleChangeText = (e) => {
+        this.setState({ message: e.target.value });
     }
     render() {
-        console.log('-------------modal props ------------',this.props);
+        console.log('-------------modal props ------------', this.props);
+        const {message} = this.state;
         return (
             <div className="modal" style={{ display: 'block' }} tabIndex="-1" role="dialog">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Modal title</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={()=> this.props.callBackClose()}>
+                            <h5 className="modal-title">Edit text</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => this.props.hideModal()}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div className="modal-body">
-                            <div className="input-group mb-2 input-group-lg">
-                                <div className="input-group-prepend" >
-                                    <span className="input-group-text" >Enter text:</span>
+                            <div className="col-sm-12 ">
+                                <div className="form-group">
+                                    <label htmlFor="comment"> <i className="fa fa-pencil"/> enter comment:</label>
+                                    <textarea className="md-textarea form-control"
+                                        rows="5"
+                                        id="comment"
+                                        name="comment"
+                                        value={this.state.message}
+                                        onChange={this.handleChangeText}
+                                        >
+                                    </textarea>
                                 </div>
-                                <input type="text"
-                                    id="textmessage"
-                                    name="textmessage"
-                                />
-                        </div>
+                            </div>  
+
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-primary">Save changes</button>
-                            <button type="button" onClick={()=> this.props.callBackClose()} className="btn btn-secondary" >Close</button>
+                            <button type="button" className="btn btn-primary"onClick={() => this.props.setMessage(message)}>Save changes</button>
+                            <button type="button" onClick={() => this.props.hideModal()} className="btn btn-secondary" >Close</button>
                         </div>
                     </div>
                 </div>
@@ -37,4 +50,11 @@ class Modal extends Component {
     }
 }
 
-export default Modal;
+const mapStateProps = (state) => {
+    console.log('----redux store connect----', state);
+    return {
+        isShowModal:state.modal.showModalWindow
+    };
+}
+
+export default connect(mapStateProps, { hideModal,setMessage })(Modal);
