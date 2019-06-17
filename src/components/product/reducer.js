@@ -1,9 +1,9 @@
-import AnimalService from "./animalService";
+import AnimalService from "./productService";
 import update from '../../helpers/update'
 
-export const GET_LIST_DATA_STARTED = "animal/GET_LIST_DATA_STARTED";
-export const GET_LIST_DATA_SUCCESS = "animal/GET_LIST_DATA_SUCCESS";
-export const GET_LIST_DATA_FAILED = "animal/GET_LIST_DATA_FAILED";
+export const GET_LIST_DATA_STARTED = "product/GET_LIST_DATA_STARTED";
+export const GET_LIST_DATA_SUCCESS = "product/GET_LIST_DATA_SUCCESS";
+export const GET_LIST_DATA_FAILED = "product/GET_LIST_DATA_FAILED";
 
 
 
@@ -15,7 +15,7 @@ const initialState = {
     },
 }
 
-export const animalReducer = (state = initialState, action) => {
+export const productReducer = (state = initialState, action) => {
     let newState = state;
 
     switch (action.type) {
@@ -54,6 +54,10 @@ export const getListData = () => {
 
         AnimalService.getListData()
             .then((response) => {
+            //     setTimeout(() => {
+            //         dispatch(getListActions.success(response));
+
+            // }, 3000);
                 dispatch(getListActions.success(response));
             })
             .catch(() => {

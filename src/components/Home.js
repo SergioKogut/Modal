@@ -176,7 +176,7 @@ class Home extends Component {
                             <div className="col-sm-2 ">
                                 <div className="form-group">
                                     <label htmlFor="photo">Photo:</label> 
-                                    <img id='photo'  src={urlLink} style={{'borderWidth':'2px','height':'135px','width':'100px'}}></img>
+                                    <img id='photo' alt="" src={urlLink} style={{'borderWidth':'2px','height':'135px','width':'100px'}}></img>
                                 </div>
                             </div>
                             <div className="col-sm-6 ">
