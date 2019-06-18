@@ -6,6 +6,7 @@ import get from 'lodash.get';
 import { Redirect } from "react-router";
 import Loader from 'react-loader-spinner'
 
+
  const SpinnerStyle={
     'position': 'fixed',
     'zIndex': '999',

@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {withRouter} from "react-router-dom"
 import * as animalActions from './reducer';
 import get from 'lodash.get';
+import propTypes from 'prop-types';
 
 class AnimalWidgetContainer extends Component {
     state = {}
 
     componentDidMount() {
         this.props.getListData();
+    }
+    redirectToAnimal=(e)=>{
+        const {history}=this.props;
+        e.preventDefault();
+        console.log('-----переходимо на сторінку додавання----');
+        history.push('animal/add');
     }
 
     render() {
@@ -27,6 +35,7 @@ class AnimalWidgetContainer extends Component {
             <div>
                 <div className="container">
 
+                    <button  className="btn btn-info" onClick={this.redirectToAnimal}> Додати тварину</button>
                     <h1 className="font-weight-light text-center text-lg-left mt-4 mb-0">Thumbnail Gallery</h1>
 
                     <hr className="mt-2 mb-5" />
@@ -57,7 +66,15 @@ const mapDispatch = (dispatch) => {
     }
 }
 
-const AnimalWidget = connect(mapState, mapDispatch)(AnimalWidgetContainer);
+AnimalWidgetContainer.propTypes =
+{
+history:propTypes.object.isRequired,
+list:propTypes.array.isRequired,
+isListError:propTypes.bool.isRequired,
+isListLoading:propTypes.bool.isRequired
+}
+
+const AnimalWidget = withRouter(connect(mapState, mapDispatch)(AnimalWidgetContainer));
 
 
 
