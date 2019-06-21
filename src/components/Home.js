@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { increment, decrement, incrementValue, decrementValue } from '../reducers/counter';
 import { showModal, hideModal } from '../reducers/modal';
 import Notifications, { notify } from '../components/Notifications'
-import Modal from './Modal';
-import './modal.css'
+import Modal from './modal/Modal';
+import './modal/modal.css'
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -35,6 +35,7 @@ class Home extends Component {
         //isShowModal: false
     }
 
+   
     handleChange = (e) => {
         this.setState({ valueAdd: Number(e.target.value) });
     }
@@ -56,7 +57,11 @@ class Home extends Component {
 
 
     render() {
-
+        const ModalProp = {
+            message: 'Enter your message',
+            urlLink: '',
+            title:"Редагувати"
+        }
         console.log('------- Home props------', this.props);
         const { count,isShowModal,modalMessage,urlLink } = this.props;
         const {valueAdd, textMessage, colorId } = this.state;
@@ -169,7 +174,7 @@ class Home extends Component {
                                 <button
                                     className="btn btn-info"
                                     style={ButtonRoundStyle}
-                                    onClick={() => this.props.showModal()}>
+                                    onClick={() => this.props.showModal(ModalProp)}>
                                     Modal show
                                 </button>
                             </div>

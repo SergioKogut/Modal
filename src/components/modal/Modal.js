@@ -1,31 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { hideModal, setMessage } from '../reducers/modal';
+import { hideModal, setMessage } from '../../reducers/modal';
+import propTypes from 'prop-types';
 
 class Modal extends Component {
+
     state = {
-         
-            message: "your message",
-            urlLink: "https://c.static-nike.com/a/images/t_PDP_1280_v1/f_auto/o85c1zecmrsre8qbf7pc/fe-nom-girls-sculpt-bra-q6FG9l.jpg"
-      
+        message: "your message",
+        urlLink: "https://c.static-nike.com/a/images/t_PDP_1280_v1/f_auto/o85c1zecmrsre8qbf7pc/fe-nom-girls-sculpt-bra-q6FG9l.jpg",
+        title:""
     }
 
     handleChangeText = (e) => {
-        this.setState({ message:  e.target.value});
+        this.setState({ message: e.target.value });
     }
     handleChangePhoto = (e) => {
         this.setState({ urlLink: e.target.value });
     }
     render() {
         console.log('-------------modal props ------------', this.props);
-       // const { message,urlLink } = this.state;
-       
+        console.log('-------------modal state ------------', this.state);
+        const { message,urlLink,title } = this.state;
+
         return (
             <div className="modal" style={{ display: 'block' }} tabIndex="-1" role="dialog">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Edit text</h5>
+                            <h5 className="modal-title">{title}</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => this.props.hideModal()}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -38,7 +40,7 @@ class Modal extends Component {
                                         rows="5"
                                         id="comment"
                                         name="comment"
-                                        value={this.state.message}
+                                        value={ message}
                                         onChange={this.handleChangeText}
                                     >
                                     </textarea>
@@ -49,7 +51,7 @@ class Modal extends Component {
                                         rows="5"
                                         id="photo"
                                         name="photo"
-                                        value={this.state.urlLink}
+                                        value={ urlLink}
                                         onChange={this.handleChangePhoto}
                                     >
                                     </input>
@@ -72,8 +74,18 @@ class Modal extends Component {
 const mapStateProps = (state) => {
     console.log('----redux store connect----', state);
     return {
-        isShowModal: state.modal.showModalWindow
+        isShowModal: state.modal.showModalWindow,
+        message:state.modal.modalWindow.message,
+        urlLink:state.modal.modalWindow.urlLink,
+        title:state.modal.modalWindow.title
     };
 }
+
+Modal.propTypes = {
+    hideModal:propTypes.func.isRequired,
+    setMessage:propTypes.func.isRequired,
+    isShowModal:propTypes.bool.isRequired,
+    title:propTypes.string.isRequired,
+};
 
 export default connect(mapStateProps, { hideModal, setMessage })(Modal);
