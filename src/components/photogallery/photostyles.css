@@ -1,0 +1,12 @@
+
+.photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto
+}
+
+.grid-figure{
+    flex-basis :33.333%
+
+}

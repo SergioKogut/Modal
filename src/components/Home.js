@@ -57,11 +57,7 @@ class Home extends Component {
 
 
     render() {
-        const ModalProp = {
-            message: 'Enter your message',
-            urlLink: '',
-            title:"Редагувати"
-        }
+       
         console.log('------- Home props------', this.props);
         const { count,isShowModal,modalMessage,urlLink } = this.props;
         const {valueAdd, textMessage, colorId } = this.state;
@@ -174,7 +170,11 @@ class Home extends Component {
                                 <button
                                     className="btn btn-info"
                                     style={ButtonRoundStyle}
-                                    onClick={() => this.props.showModal(ModalProp)}>
+                                    onClick={() => this.props.showModal({
+                                                                            message: 'Enter your message',
+                                                                            urlLink: '',
+                                                                            title:"Редагувати"
+                                                                        })}>
                                     Modal show
                                 </button>
                             </div>

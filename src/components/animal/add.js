@@ -1,14 +1,21 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import {connect} from 'react-redux';
+//import axios from 'axios';
 import classnames from 'classnames';
 import noPhoto from './No_image_available.png';
+import get from 'lodash.get';
+import * as animalActions from './reducer';
+import {withRouter} from 'react-router-dom';
+import propTypes from 'prop-types';
+import SpinnerWidget from '../spinner';
+
 const FormStyle = {
   boxShadow: '0 0 5px 3px',
   margin: '20px',
   padding: '20px',
 };
 
-class AnimalCreate extends Component {
+class AnimalCreateContainer extends Component {
   constructor (props) {
     super (props);
     this.state = {
@@ -48,25 +55,26 @@ class AnimalCreate extends Component {
         name: this.state.name,
         image: this.state.image,
       };
-      axios.post ('https://localhost:44320/api/animal/add', model).then (
-        resp => {
-          console.log ('--success post--', resp.data);
-          this.setState ({done: true});
-          this.props.history.push ('/animal');
-        },
-        err => {
-          console.log ('--err problem---', err);
-          this.setState ({errors: err.response.data, isLoading: false});
-        }
-      );
+
+      this.props.createNewAnimal (model);
+
+      if(!this.props.isError){
+        this.setState ({done: true});
+        this.props.createNewAnimal (model);
+        this.props.history.push ('/animal');
+        
+      }    
+     
     } else {
       this.setState ({errors});
     }
   };
 
+
   errorImage = () => {
     this.setState ({errorImage: true});
   };
+
   onChangeInput = e => {
     const {errors} = this.state;
     const {name, value} = e.target;
@@ -84,7 +92,9 @@ class AnimalCreate extends Component {
 
   render () {
     console.log ('---AnimalCreate state----', this.state);
+    console.log ('---AnimalCreate props----', this.props);
     const {name, image, errors} = this.state;
+    const {  isLoading,isError } = this.props;
     return (
       <React.Fragment>
 
@@ -96,6 +106,10 @@ class AnimalCreate extends Component {
                     {errors.invalid}.
                   </div>
                 : ''}
+                {isError ? 
+                (<div className="alert alert-danger" style={{'margin':'10px' }}>Завантаження  данних невдале!</div>)
+                 : ''}
+
               <h1 className="text-left"> Додати тварину</h1>
               <div className="row justify-content-md-center">
                 <div className="col-sm-6 ">
@@ -153,9 +167,43 @@ class AnimalCreate extends Component {
             </form>
           </div>
         </div>
+        <SpinnerWidget loading={isLoading} />
       </React.Fragment>
     );
   }
 }
 
-export default AnimalCreate;
+AnimalCreateContainer.propTypes = {
+  history: propTypes.object.isRequired,
+  createNewAnimal:propTypes.func.isRequired,
+  isError: propTypes.bool.isRequired,
+  isLoading: propTypes.bool.isRequired,
+};
+
+
+const mapState = state => {
+  return {
+    //list: get (state, 'animal.list.data'),
+    isLoading: get (state, 'animal.loading'),
+    isError: get (state, 'animal.error'),
+  };
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+      createNewAnimal: (model) => {
+          dispatch(animalActions.createNewAnimal(model));
+          
+      }
+  }
+}
+
+
+
+
+
+const AnimalCreateWidget = withRouter (
+  connect (mapState, mapDispatch) (AnimalCreateContainer)
+);
+
+export default AnimalCreateWidget;

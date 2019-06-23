@@ -5,9 +5,20 @@ export const GET_LIST_DATA_STARTED = "animal/GET_LIST_DATA_STARTED";
 export const GET_LIST_DATA_SUCCESS = "animal/GET_LIST_DATA_SUCCESS";
 export const GET_LIST_DATA_FAILED = "animal/GET_LIST_DATA_FAILED";
 
+export const CREATE_ANIMAL_STARTED = "animal/CREATE_ANIMAL_STARTED";
+export const CREATE_ANIMAL_SUCCESS = "animal/CREATE_ANIMAL_SUCCESS";
+export const CREATE_ANIMAL_FAILED = "animal/CREATE_ANIMAL_FAILED";
 
 
 const initialState = {
+    form: {
+        name: null,
+        image: null
+            },
+        error: false,
+        loading: false,
+        isValid: false
+    ,
     list: {
         data: [],
         error: false,
@@ -20,10 +31,24 @@ export const animalReducer = (state = initialState, action) => {
 
     switch (action.type) {
 
+        case CREATE_ANIMAL_STARTED: {
+            newState = update.set(state, 'loading', true);
+            break;
+        }
+        case CREATE_ANIMAL_FAILED: {
+            newState = update.set(state, 'loading', false);
+            newState = update.set(newState, 'error', true);
+            break;
+        }
+        case CREATE_ANIMAL_SUCCESS: {
+            newState = update.set(state, 'loading', false);
+            break;  
+        }
+
+//---------------------------------------------
+
         case GET_LIST_DATA_STARTED: {
             newState = update.set(state, 'list.loading', true);
-
-           // newState = Object.assign({}, state, { list: { data: state.list.data, error: state.list.error, loading: true, } }); //update.set(state, 'list.loading', true);
             break;
         }
         case GET_LIST_DATA_SUCCESS: {
@@ -34,9 +59,11 @@ export const animalReducer = (state = initialState, action) => {
         case GET_LIST_DATA_FAILED: {
             newState = update.set(state, 'list.loading', false);
             newState = update.set(newState, 'list.error', true);
-           // newState = Object.assign({}, state, { list: { data: state.list.data, error: state.list.error, loading: true, } }); //update.set(state, 'list.loading', true);
             break;
         }
+
+
+
 
 
         default: {
@@ -46,6 +73,24 @@ export const animalReducer = (state = initialState, action) => {
 
     return newState;
 }
+
+export const createNewAnimal = (model) => {
+    return (dispatch) => {
+        dispatch(createAnimalActions.started());
+
+        AnimalService.createNewAnimal(model)
+            .then((response) => {
+                console.log ('--success post--', response.data);
+                dispatch(createAnimalActions.success(response));
+            })
+            .catch(() => {
+                console.log('--failed--');
+                dispatch(createAnimalActions.failed());
+            });
+    }
+}
+
+
 
 
 export const getListData = () => {
@@ -61,6 +106,29 @@ export const getListData = () => {
             });
     }
 }
+
+
+export const createAnimalActions = {
+    started: () => {
+        return {
+            type: CREATE_ANIMAL_STARTED
+        }
+    },
+
+    success: (data) => {
+        return {
+            type: CREATE_ANIMAL_SUCCESS,
+            payload: data
+        }
+    },
+
+    failed: (error) => {
+        return {
+            type: CREATE_ANIMAL_FAILED
+        }
+    }
+}
+
 
 export const getListActions = {
     started: () => {
@@ -83,24 +151,3 @@ export const getListActions = {
     }
 }
 
-//
-//
-//
-//
-
-// import { createAction, createActions, handleActions } from 'redux-actions';
-// const initState = {
-//     showModalWindow: false,
-//     messageStore: '',
-//     urlLinkStore:''
-// };
-
-// export const { showModal, hideModal } = createActions('SHOW_MODAL', 'HIDE_MODAL');
-// export const setMessage = createAction('SET_MESSAGE', message => ({ message }));
-
-
-// export default handleActions({
-//     [showModal]: (state) => Object.assign({}, state, { showModalWindow: true }), //як варіант
-//     [hideModal]: (state) => ({ ...state, showModalWindow: false }),
-//     [setMessage]: (state, { payload }) => ({ ...state, messageStore: payload.message })
-// }, initState);
