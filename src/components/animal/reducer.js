@@ -12,13 +12,14 @@ export const CREATE_ANIMAL_FAILED = "animal/CREATE_ANIMAL_FAILED";
 
 const initialState = {
     form: {
-        name: null,
-        image: null
-            },
-        error: false,
-        loading: false,
-        isValid: false
-    ,
+            name: null,
+            image: null
+        },
+    error: false,
+    loading: false,
+    isValid: false,
+    success: false,
+    
     list: {
         data: [],
         error: false,
@@ -42,6 +43,7 @@ export const animalReducer = (state = initialState, action) => {
         }
         case CREATE_ANIMAL_SUCCESS: {
             newState = update.set(state, 'loading', false);
+            newState = update.set(newState, 'success', true);
             break;  
         }
 

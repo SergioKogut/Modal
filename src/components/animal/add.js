@@ -55,22 +55,25 @@ class AnimalCreateContainer extends Component {
         name: this.state.name,
         image: this.state.image,
       };
-
-      this.props.createNewAnimal (model);
-
-      if(!this.props.isError){
-        this.setState ({done: true});
-        this.props.createNewAnimal (model);
-        this.props.history.push ('/animal');
+      this.props.createNewAnimal(model);
+      // if(!this.props.isError){
+      //   this.setState ({done: true});
+      //   this.props.history.push ('/animal');
         
-      }    
+      // }    
      
     } else {
       this.setState ({errors});
     }
   };
 
-
+  
+  componentWillReceiveProps(newprops) {
+    const { isSuccess, history} = newprops;
+    if(isSuccess)
+    console.log("Hello", isSuccess);
+      history.push('/animal');
+  }
   errorImage = () => {
     this.setState ({errorImage: true});
   };
@@ -184,8 +187,9 @@ AnimalCreateContainer.propTypes = {
 const mapState = state => {
   return {
     //list: get (state, 'animal.list.data'),
-    isLoading: get (state, 'animal.loading'),
-    isError: get (state, 'animal.error'),
+    isLoading: get(state, 'animal.loading'),
+    isError: get(state, 'animal.error'),
+    isSuccess: get(state, 'animal.success'),
   };
 };
 
