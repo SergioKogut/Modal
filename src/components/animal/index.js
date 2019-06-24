@@ -21,6 +21,13 @@ class AnimalWidgetContainer extends Component {
     console.log('-----переходимо на сторінку додавання----');
     history.push('animal/add');
   };
+  redirectToAnimalCropper = e => {
+    const { history } = this.props;
+    e.preventDefault();
+    console.log('-----переходимо на сторінку додавання----');
+    history.push('animal/add/cropper');
+  };
+
 
   ChangeCount=()=>{
     const {count} = this.state;
@@ -38,8 +45,8 @@ class AnimalWidgetContainer extends Component {
 
     const listContent = this.props.list.map(item => {
       return (
-        <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 0px 2px', height: '250px', margin: '10px', paddingTop: '10px' }}>
-          <div className="d-block mb-4 h-100 text-center" >
+        <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 5px 5px', height: '250px', margin: '10px', paddingTop: '10px',borderRadius: '5px' }}>
+          <div className="d-block mb-4 h-100 text-center" style={{ borderRadius: '5px' }}>
             <img
               className="img-fluid img-thumbnail "
               style={{ height: '150px' }}
@@ -48,8 +55,8 @@ class AnimalWidgetContainer extends Component {
             />
             <p> {item.name} </p>
             <p className="text-center">
-              <button type="button" class="btn btn-outline-info" onClick ={this.ChangeCount} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart" aria-hidden="true" />  {this.state.count} </button>
-              <button type="button" class="btn btn-outline-success" onClick ={this.ChangeMessage} style={{ width: '40%'}} ><i class="fa fa-comment-o" aria-hidden="true" />{this.state.message} </button>
+              <button type="button" className="btn btn-outline-info" onClick ={this.ChangeCount} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart" aria-hidden="true" />  {item.ImageLikeCounter} </button>
+              <button type="button" className="btn btn-outline-success" onClick ={this.ChangeMessage} style={{ width: '40%'}} ><i className="fa fa-comment-o" aria-hidden="true" />{this.state.message} </button>
             </p>
           </div>
         </div>
@@ -61,9 +68,8 @@ class AnimalWidgetContainer extends Component {
       <div>
         <div className="container">
 
-          <button className="btn btn-info" onClick={this.redirectToAnimal}>
-            Додати тварину
-          </button>
+          <button className="btn btn-info" onClick={this.redirectToAnimal} style={{  marginRight: '5px' }}>Додати тварину</button>
+          <button className="btn btn-info" onClick={this.redirectToAnimalCropper}>Додати фото кропер</button>
           <h1 className="font-weight-light text-center text-lg-left mt-4 mb-0">
             Галерея тварин
           </h1>

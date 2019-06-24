@@ -9,17 +9,27 @@ export const CREATE_ANIMAL_STARTED = "animal/CREATE_ANIMAL_STARTED";
 export const CREATE_ANIMAL_SUCCESS = "animal/CREATE_ANIMAL_SUCCESS";
 export const CREATE_ANIMAL_FAILED = "animal/CREATE_ANIMAL_FAILED";
 
+export const ADD_ANIMAL_LIKE_STARTED = "animal/ADD_ANIMAL_LIKE_STARTED";
+export const ADD_ANIMAL_LIKE_SUCCESS = "animal/ADD_ANIMAL_LIKE_SUCCESS";
+export const ADD_ANIMAL_LIKE_FAILED = "animal/ADD_ANIMAL_LIKE_FAILED";
+
+
+
 
 const initialState = {
     form: {
-            name: null,
-            image: null
-        },
+        name: null,
+        image: null
+    },
     error: false,
     loading: false,
     isValid: false,
     success: false,
-    
+    like: {
+        error: false,
+        loading: false,
+        success: false
+    },
     list: {
         data: [],
         error: false,
@@ -34,6 +44,7 @@ export const animalReducer = (state = initialState, action) => {
 
         case CREATE_ANIMAL_STARTED: {
             newState = update.set(state, 'loading', true);
+            newState = update.set(newState, 'success', false);
             break;
         }
         case CREATE_ANIMAL_FAILED: {
@@ -44,10 +55,10 @@ export const animalReducer = (state = initialState, action) => {
         case CREATE_ANIMAL_SUCCESS: {
             newState = update.set(state, 'loading', false);
             newState = update.set(newState, 'success', true);
-            break;  
+            break;
         }
 
-//---------------------------------------------
+        //---------------------------------------------
 
         case GET_LIST_DATA_STARTED: {
             newState = update.set(state, 'list.loading', true);
@@ -64,10 +75,6 @@ export const animalReducer = (state = initialState, action) => {
             break;
         }
 
-
-
-
-
         default: {
             return newState;
         }
@@ -82,7 +89,7 @@ export const createNewAnimal = (model) => {
 
         AnimalService.createNewAnimal(model)
             .then((response) => {
-                console.log ('--success post--', response.data);
+                console.log('--success post--', response.data);
                 dispatch(createAnimalActions.success(response));
             })
             .catch(() => {

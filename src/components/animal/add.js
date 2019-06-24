@@ -93,7 +93,7 @@ class AnimalCreateContainer extends Component {
     console.log ('---AnimalCreate state----', this.state);
     console.log ('---AnimalCreate props----', this.props);
     const {name, image, errors} = this.state;
-    const {  isLoading,isError } = this.props;
+    const { isLoading,isError } = this.props;
     return (
       <React.Fragment>
 

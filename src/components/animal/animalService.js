@@ -9,4 +9,8 @@ export default class AnimalService {
   static createNewAnimal (model) {
     return axios.post ('https://localhost:44320/api/animal/create', model);
   }
+
+  static addLikeAnimal (model) {
+    return axios.put ('https://localhost:44320/api/animal/addlike'+model.id, model);
+  }
 }
