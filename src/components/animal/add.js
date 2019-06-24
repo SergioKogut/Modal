@@ -49,30 +49,26 @@ class AnimalCreateContainer extends Component {
 
     const isValid = Object.keys (errors).length === 0;
     if (isValid) {
-      this.setState ({isLoading: true});
+      this.setState({ isLoading: true });
 
       const model = {
         name: this.state.name,
         image: this.state.image,
       };
       this.props.createNewAnimal(model);
-      // if(!this.props.isError){
-      //   this.setState ({done: true});
-      //   this.props.history.push ('/animal');
-        
-      // }    
-     
+    
     } else {
-      this.setState ({errors});
+      this.setState({ errors });
     }
   };
-
   
   componentWillReceiveProps(newprops) {
     const { isSuccess, history} = newprops;
     if(isSuccess)
-    console.log("Hello", isSuccess);
-      history.push('/animal');
+    {
+    console.log("isSuccess: ", isSuccess);
+    history.push('/animal');
+    }
   }
   errorImage = () => {
     this.setState ({errorImage: true});
@@ -111,7 +107,7 @@ class AnimalCreateContainer extends Component {
                 : ''}
                 {isError ? 
                 (<div className="alert alert-danger" style={{'margin':'10px' }}>Завантаження  данних невдале!</div>)
-                 : ''}
+                : ''}
 
               <h1 className="text-left"> Додати тварину</h1>
               <div className="row justify-content-md-center">
@@ -186,7 +182,6 @@ AnimalCreateContainer.propTypes = {
 
 const mapState = state => {
   return {
-    //list: get (state, 'animal.list.data'),
     isLoading: get(state, 'animal.loading'),
     isError: get(state, 'animal.error'),
     isSuccess: get(state, 'animal.success'),

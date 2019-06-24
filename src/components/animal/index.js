@@ -1,61 +1,76 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as animalActions from './reducer';
 import get from 'lodash.get';
 import propTypes from 'prop-types';
 import SpinnerWidget from '../spinner';
 
 class AnimalWidgetContainer extends Component {
-  state = {};
-
-  componentDidMount () {
-    this.props.getListData ();
-  }
-  redirectToAnimal = e => {
-    const {history} = this.props;
-    e.preventDefault ();
-    console.log ('-----переходимо на сторінку додавання----');
-    history.push ('animal/add');
+  state = {
+    count:25,
+    message:37
   };
 
-  render () {
-    console.log ('----state-----', this.state);
-    console.log ('----Props-----', this.props);
-    const {isListLoading} = this.props;
-    const listContent = this.props.list.map (item => {
+  componentDidMount() {
+    this.props.getListData();
+  }
+  redirectToAnimal = e => {
+    const { history } = this.props;
+    e.preventDefault();
+    console.log('-----переходимо на сторінку додавання----');
+    history.push('animal/add');
+  };
+
+  ChangeCount=()=>{
+    const {count} = this.state;
+    this.setState ({count: count+1});
+  }
+  ChangeMessage=()=>{
+    const {message} = this.state;
+    this.setState ({message: message+1});
+  }
+
+  render() {
+    console.log('----state-----', this.state);
+    console.log('----Props-----', this.props);
+    const { isListLoading } = this.props;
+
+    const listContent = this.props.list.map(item => {
       return (
-        <div key={item.id} className="col-lg-3 col-md-4 col-6">
-          <div className="d-block mb-4 h-100">
+        <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 0px 2px', height: '250px', margin: '10px', paddingTop: '10px' }}>
+          <div className="d-block mb-4 h-100 text-center" >
             <img
-              className="img-fluid img-thumbnail"
-              style={{boxShadow: '0 0 5px 2px'}}
+              className="img-fluid img-thumbnail "
+              style={{ height: '150px' }}
               src={item.image}
               alt=""
             />
-            <b> {item.name}    </b>
+            <p> {item.name} </p>
+            <p className="text-center">
+              <button type="button" class="btn btn-outline-info" onClick ={this.ChangeCount} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart" aria-hidden="true" />  {this.state.count} </button>
+              <button type="button" class="btn btn-outline-success" onClick ={this.ChangeMessage} style={{ width: '40%'}} ><i class="fa fa-comment-o" aria-hidden="true" />{this.state.message} </button>
+            </p>
           </div>
         </div>
       );
     });
+
+
     return (
       <div>
         <div className="container">
 
           <button className="btn btn-info" onClick={this.redirectToAnimal}>
-           Додати тварину
+            Додати тварину
           </button>
           <h1 className="font-weight-light text-center text-lg-left mt-4 mb-0">
-            Thumbnail Gallery
+            Галерея тварин
           </h1>
-
           <hr className="mt-2 mb-5" />
-
           <div className="row text-center text-lg-left">
-
             {listContent}
           </div>
-
         </div>
         <SpinnerWidget loading={isListLoading} />
       </div>
@@ -65,15 +80,15 @@ class AnimalWidgetContainer extends Component {
 
 const mapState = state => {
   return {
-    list: get (state, 'animal.list.data'),
-    isListLoading: get (state, 'animal.list.loading'),
-    isListError: get (state, 'animal.list.error'),
+    list: get(state, 'animal.list.data'),
+    isListLoading: get(state, 'animal.list.loading'),
+    isListError: get(state, 'animal.list.error'),
   };
 };
 const mapDispatch = dispatch => {
   return {
     getListData: () => {
-      dispatch (animalActions.getListData ());
+      dispatch(animalActions.getListData());
     },
   };
 };
@@ -85,8 +100,8 @@ AnimalWidgetContainer.propTypes = {
   isListLoading: propTypes.bool.isRequired,
 };
 
-const AnimalWidget = withRouter (
-  connect (mapState, mapDispatch) (AnimalWidgetContainer)
+const AnimalWidget = withRouter(
+  connect(mapState, mapDispatch)(AnimalWidgetContainer)
 );
 
 export default AnimalWidget;
