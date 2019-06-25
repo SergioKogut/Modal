@@ -23,7 +23,7 @@ export const productReducer = (state = initialState, action) => {
         case GET_LIST_DATA_STARTED: {
             newState = update.set(state, 'list.loading', true);
 
-           // newState = Object.assign({}, state, { list: { data: state.list.data, error: state.list.error, loading: true, } }); //update.set(state, 'list.loading', true);
+            //newState = Object.assign({}, state, { list: { data: state.list.data, error: state.list.error, loading: true, } }); //update.set(state, 'list.loading', true);
             break;
         }
         case GET_LIST_DATA_SUCCESS: {

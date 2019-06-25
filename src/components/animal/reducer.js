@@ -16,6 +16,7 @@ export const ADD_ANIMAL_LIKE_FAILED = "animal/ADD_ANIMAL_LIKE_FAILED";
 
 
 
+
 const initialState = {
     form: {
         name: null,
@@ -71,31 +72,21 @@ export const animalReducer = (state = initialState, action) => {
             break;
         }
         case ADD_ANIMAL_LIKE_SUCCESS: {
-            const i = action.payload.data;
+            let data=state.list.data.map(item => {
+                if (item.id === action.payload.data) 
+                    return update.set(item, 'imageLikeCount', item.imageLikeCount+1);      
+                 return item;
+                });
+           
             newState = update.set(state, 'like.loading', false);
             newState = update.set(newState, 'like.success', true);
-           // newState = ([ ...newState.slice(0, i),{ ...newState[i], imageLikeCount: newState[i].imageLikeCount + 1 },...newState.slice(i + 1)]);
+            newState = update.set(newState, 'list.data', data);
+            
+           
+
             break;
         }
-        //----(newstate, { payload }) => ({ ...state, modalWindow: payload.data})   imageLikeCount
-            //         export default function posts(state = [], action)
-            //         {
-            //             if (action.type !== 'INCREMENT_LIKES')
-            //             {
-            //                 return state
-            //             }
-            
-            //             const i = action.index
-
-            //   return [
-            //     ...state.slice(0, i),
-            //     { ...state[i], likes: state[i].likes + 1 },
-            //     ...state.slice(i + 1)
-            //   ]
-
-        //---------------------------------------------
-
-
+     
 
         case GET_LIST_DATA_STARTED: {
             newState = update.set(state, 'list.loading', true);

@@ -21,7 +21,8 @@ class AnimalWidgetContainer extends Component {
     if(isSuccess)
     {
     console.log("isSuccess: ", isSuccess);
-    this.props.getListData();
+    //this.props.getListData();
+    //console.log('------new props------', newprops);
     }
   }
 
