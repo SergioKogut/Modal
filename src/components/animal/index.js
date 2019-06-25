@@ -8,19 +8,30 @@ import SpinnerWidget from '../spinner';
 
 class AnimalWidgetContainer extends Component {
   state = {
-    count:25,
-    message:37
+    count: 25,
+    message: 37
   };
 
   componentDidMount() {
     this.props.getListData();
   }
+  
+  componentWillReceiveProps(newprops) {
+    const { isSuccess} = newprops;
+    if(isSuccess)
+    {
+    console.log("isSuccess: ", isSuccess);
+    this.props.getListData();
+    }
+  }
+
   redirectToAnimal = e => {
     const { history } = this.props;
     e.preventDefault();
     console.log('-----переходимо на сторінку додавання----');
     history.push('animal/add');
   };
+
   redirectToAnimalCropper = e => {
     const { history } = this.props;
     e.preventDefault();
@@ -29,14 +40,21 @@ class AnimalWidgetContainer extends Component {
   };
 
 
-  ChangeCount=()=>{
-    const {count} = this.state;
-    this.setState ({count: count+1});
-  }
-  ChangeMessage=()=>{
-    const {message} = this.state;
-    this.setState ({message: message+1});
-  }
+  ChangeCount = (e) => {
+  
+  console.log('ChangeCount : ', e.target.id);
+    // const model = {
+    //   imageLikeCount: countLike + 1,
+    // };
+
+    this.props.addLikeAnimal(e.target.id);
+
+  };
+
+  ChangeMessage = () => {
+    const { message } = this.state;
+    this.setState({ message: message + 1 });
+  };
 
   render() {
     console.log('----state-----', this.state);
@@ -45,7 +63,7 @@ class AnimalWidgetContainer extends Component {
 
     const listContent = this.props.list.map(item => {
       return (
-        <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 5px 5px', height: '250px', margin: '10px', paddingTop: '10px',borderRadius: '5px' }}>
+        <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 5px 5px', height: '250px', margin: '10px', paddingTop: '10px', borderRadius: '5px' }}>
           <div className="d-block mb-4 h-100 text-center" style={{ borderRadius: '5px' }}>
             <img
               className="img-fluid img-thumbnail "
@@ -55,8 +73,8 @@ class AnimalWidgetContainer extends Component {
             />
             <p> {item.name} </p>
             <p className="text-center">
-              <button type="button" className="btn btn-outline-info" onClick ={this.ChangeCount} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart" aria-hidden="true" />  {item.ImageLikeCounter} </button>
-              <button type="button" className="btn btn-outline-success" onClick ={this.ChangeMessage} style={{ width: '40%'}} ><i className="fa fa-comment-o" aria-hidden="true" />{this.state.message} </button>
+              <button type="button" className="btn btn-outline-info" id={item.id} onClick={this.ChangeCount} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart" id={item.id} aria-hidden="true" />  {item.imageLikeCount} </button>
+              <button type="button" className="btn btn-outline-success" onClick={this.ChangeMessage} style={{ width: '40%' }} ><i className="fa fa-comment-o" aria-hidden="true" />{this.state.message} </button>
             </p>
           </div>
         </div>
@@ -68,7 +86,7 @@ class AnimalWidgetContainer extends Component {
       <div>
         <div className="container">
 
-          <button className="btn btn-info" onClick={this.redirectToAnimal} style={{  marginRight: '5px' }}>Додати тварину</button>
+          <button className="btn btn-info" onClick={this.redirectToAnimal} style={{ marginRight: '5px' }}>Додати тварину</button>
           <button className="btn btn-info" onClick={this.redirectToAnimalCropper}>Додати фото кропер</button>
           <h1 className="font-weight-light text-center text-lg-left mt-4 mb-0">
             Галерея тварин
@@ -89,13 +107,15 @@ const mapState = state => {
     list: get(state, 'animal.list.data'),
     isListLoading: get(state, 'animal.list.loading'),
     isListError: get(state, 'animal.list.error'),
+    isSuccess: get(state, 'animal.like.success'),
   };
 };
 const mapDispatch = dispatch => {
   return {
-    getListData: () => {
-      dispatch(animalActions.getListData());
-    },
+    getListData: () => 
+      dispatch(animalActions.getListData()),
+    addLikeAnimal: (id) => 
+      dispatch(animalActions.addLikeAnimal(id))
   };
 };
 

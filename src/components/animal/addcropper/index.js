@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './index.css';
-
 import CropperWidget from './modal/index';
+import Cropper from 'react-cropper';
 
 class AnimalAddCropperWidgetContainer extends Component {
     constructor(props) {

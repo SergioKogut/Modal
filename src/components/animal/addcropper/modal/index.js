@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import 'cropperjs/dist/cropper.css';
 import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+
 
 
 class CropperWidgetContainer extends Component {
     state = {
         //loading: true
-      }
+    }
     render() { 
         const { loading, src, onClose } = this.props;
         

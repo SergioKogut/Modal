@@ -60,8 +60,46 @@ export const animalReducer = (state = initialState, action) => {
 
         //---------------------------------------------
 
+        case ADD_ANIMAL_LIKE_STARTED: {
+            newState = update.set(state, 'like.loading', true);
+            newState = update.set(newState, 'like.success', false);
+            break;
+        }
+        case ADD_ANIMAL_LIKE_FAILED: {
+            newState = update.set(state, 'like.loading', false);
+            newState = update.set(newState, 'like.error', true);
+            break;
+        }
+        case ADD_ANIMAL_LIKE_SUCCESS: {
+            const i = action.payload.data;
+            newState = update.set(state, 'like.loading', false);
+            newState = update.set(newState, 'like.success', true);
+           // newState = ([ ...newState.slice(0, i),{ ...newState[i], imageLikeCount: newState[i].imageLikeCount + 1 },...newState.slice(i + 1)]);
+            break;
+        }
+        //----(newstate, { payload }) => ({ ...state, modalWindow: payload.data})   imageLikeCount
+            //         export default function posts(state = [], action)
+            //         {
+            //             if (action.type !== 'INCREMENT_LIKES')
+            //             {
+            //                 return state
+            //             }
+            
+            //             const i = action.index
+
+            //   return [
+            //     ...state.slice(0, i),
+            //     { ...state[i], likes: state[i].likes + 1 },
+            //     ...state.slice(i + 1)
+            //   ]
+
+        //---------------------------------------------
+
+
+
         case GET_LIST_DATA_STARTED: {
             newState = update.set(state, 'list.loading', true);
+            newState = update.set(newState, 'like.success', false);
             break;
         }
         case GET_LIST_DATA_SUCCESS: {
@@ -99,6 +137,22 @@ export const createNewAnimal = (model) => {
     }
 }
 
+export const addLikeAnimal = (model) => {
+    return (dispatch) => {
+        dispatch(addLikeAnimalActions.started());
+
+        AnimalService.addLikeAnimal(model)
+            .then((response) => {
+                console.log('--success put--', response.data);
+                dispatch(addLikeAnimalActions.success(response));
+            })
+            .catch(() => {
+                console.log('--failed--');
+                dispatch(addLikeAnimalActions.failed());
+            });
+    }
+}
+
 
 
 
@@ -115,6 +169,10 @@ export const getListData = () => {
             });
     }
 }
+
+
+
+
 
 
 export const createAnimalActions = {
@@ -139,6 +197,10 @@ export const createAnimalActions = {
 }
 
 
+
+
+
+
 export const getListActions = {
     started: () => {
         return {
@@ -160,3 +222,23 @@ export const getListActions = {
     }
 }
 
+export const addLikeAnimalActions = {
+    started: () => {
+        return {
+            type: ADD_ANIMAL_LIKE_STARTED
+        }
+    },
+
+    success: (data) => {
+        return {
+            type: ADD_ANIMAL_LIKE_SUCCESS,
+            payload: data
+        }
+    },
+
+    failed: (error) => {
+        return {
+            type: ADD_ANIMAL_LIKE_FAILED
+        }
+    }
+}
