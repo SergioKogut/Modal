@@ -21,8 +21,6 @@ class AnimalWidgetContainer extends Component {
     if(isSuccess)
     {
     console.log("isSuccess: ", isSuccess);
-    //this.props.getListData();
-    //console.log('------new props------', newprops);
     }
   }
 
@@ -40,14 +38,17 @@ class AnimalWidgetContainer extends Component {
     history.push('animal/add/cropper');
   };
 
+  redirectToAnimalCropperMy = e => {
+    const { history } = this.props;
+    e.preventDefault();
+    console.log('-----переходимо на сторінку додавання з кропером----');
+    history.push('animal/addcropper');
+  };
+
 
   ChangeCount = (e) => {
   
   console.log('ChangeCount : ', e.target.id);
-    // const model = {
-    //   imageLikeCount: countLike + 1,
-    // };
-
     this.props.addLikeAnimal(e.target.id);
 
   };
@@ -88,7 +89,8 @@ class AnimalWidgetContainer extends Component {
         <div className="container">
 
           <button className="btn btn-info" onClick={this.redirectToAnimal} style={{ marginRight: '5px' }}>Додати тварину</button>
-          <button className="btn btn-info" onClick={this.redirectToAnimalCropper}>Додати фото кропер</button>
+          <button className="btn btn-info" onClick={this.redirectToAnimalCropper}  style={{ marginRight: '5px' }}>Додати фото кропер</button>
+          <button className="btn btn-info" onClick={this.redirectToAnimalCropperMy}>Додати фото кропер мій</button>
           <h1 className="font-weight-light text-center text-lg-left mt-4 mb-0">
             Галерея тварин
           </h1>
