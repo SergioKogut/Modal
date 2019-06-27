@@ -47,7 +47,7 @@ class AnimalCreateCropperContainer extends Component {
             this.setState({ [name]: value });
         }
     };
-    changeInput(e) {
+    changeInput = (e) => {
         e.preventDefault();
         let files;
         if (e.dataTransfer) {
@@ -99,7 +99,8 @@ class AnimalCreateCropperContainer extends Component {
         e.preventDefault();
         let errors = {};
         if (this.state.name === '') errors.name = 'Не може бути пустим!';
-        
+        if (this.state.imageBase64 === defaultPath) errors.image = 'Додайте фото!';
+      
 
         const isValid = Object.keys(errors).length === 0;
         if (isValid) {
@@ -160,7 +161,7 @@ class AnimalCreateCropperContainer extends Component {
                             {!!errors.invalid
                                 ? <div className="alert alert-danger">
                                     {errors.invalid}.
-                </div>
+                                </div>
                                 : ''}
                             {isError ?
                                 (<div className="alert alert-danger" style={{ 'margin': '10px' }}>Завантаження  данних невдале!</div>)
@@ -216,7 +217,7 @@ class AnimalCreateCropperContainer extends Component {
                                             />
                                             <p></p>
                                             <div>
-                                                <button type="button" onClick={this.cropImage} className="btn btn-primary btn-crop" >Crop Image</button>
+                                                <button type="button" onClick={this.cropImage} className="btn btn-primary btn-crop" ><i className="fa fa-crop" aria-hidden="true"/> Crop Image</button>
                                                 <button type="button" onClick={e => this.operationImage(e, 'ZOOM+', 0.1)} className="btn btn-primary  btn-crop"><i className="fa fa-search-plus" aria-hidden="true" /></button>
                                                 <button type="button" onClick={e => this.operationImage(e, 'ZOOM-', -0.1)} className="btn btn-primary  btn-crop"><i className="fa fa-search-minus" aria-hidden="true" /></button>
                                                 <button type="button" onClick={e => this.operationImage(e, 'ROTARE_LEFT', 45)} className="btn btn-primary  btn-crop"><i className="fa fa-repeat" aria-hidden="true" /></button>
