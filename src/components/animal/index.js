@@ -5,6 +5,7 @@ import * as animalActions from './reducer';
 import get from 'lodash.get';
 import propTypes from 'prop-types';
 import SpinnerWidget from '../spinner';
+import './inputDes.css'
 
 class AnimalWidgetContainer extends Component {
   state = {
@@ -66,7 +67,8 @@ class AnimalWidgetContainer extends Component {
     const listContent = this.props.list.map(item => {
       return (
         <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 5px 5px', height: '250px', margin: '10px', paddingTop: '10px', borderRadius: '5px' }}>
-          <div className="d-block mb-4 h-100 text-center" style={{ borderRadius: '5px' }}>
+          <div className="d-block mb-4 h-100 text-center container" >
+          <div className="btn btn-light x" >X</div>
             <img
               className="img-fluid img-thumbnail "
               style={{ height: '150px' }}

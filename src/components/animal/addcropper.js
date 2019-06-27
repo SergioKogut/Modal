@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
 //import axios from 'axios';
 import classnames from 'classnames';
-import noPhoto from './No_image_available.png';
-import get from 'lodash.get';
-import * as animalActions from './reducer';
+//import get from 'lodash.get';
+//import * as animalActions from './reducer';
 import { withRouter } from 'react-router-dom';
-import propTypes from 'prop-types';
+//import propTypes from 'prop-types';
 import SpinnerWidget from '../spinner';
 //import { Row } from 'react-bootstrap'
 import defaultPath from './No_image_available.png'
 import Cropper from 'react-cropper';
 import './inputDes.css'
+import axios from 'axios';
 
 const FormStyle = {
-    // boxShadow: '0 0 5px 3px',
     margin: '20px',
     padding: '20px',
 };
@@ -27,6 +26,7 @@ class AnimalCreateCropperContainer extends Component {
             image: '',
             imageBase64: defaultPath,
             errors: {},
+            src:'',
             done: false,
             isLoading: false,
             isLoadingPhoto: false,
@@ -62,7 +62,7 @@ class AnimalCreateCropperContainer extends Component {
         reader.readAsDataURL(files[0]);
         this.setState({ isLoadingPhoto: true });
     }
-    cropImage= ()=> {
+    cropImage = () => {
         if (typeof this.cropper.getCroppedCanvas() === 'undefined') {
             return;
         }
@@ -73,42 +73,63 @@ class AnimalCreateCropperContainer extends Component {
         this.setState({ src: '' });
     }
 
-    rotareImage = () => {
-        this.cropper.rotate(45);
+    operationImage = (e, type, value) => {
+        e.preventDefault();
+
+        switch (type) {
+
+            case 'ROTARE_LEFT':
+                this.cropper.rotate(value);
+                break;
+            case 'ROTARE_RIGHT':
+                this.cropper.rotate(-value);
+                break;
+            case 'ZOOM+':
+                this.cropper.rotate(value);
+                break;
+            case 'ZOOM-':
+                this.cropper.rotate(value);
+                break;
+            default:
+
+        }
     };
 
     onSubmitForm = e => {
         e.preventDefault();
         let errors = {};
         if (this.state.name === '') errors.name = 'Не може бути пустим!';
-        if (this.state.image === '') errors.image = 'Не може бути пустим!';
-        if (this.state.errorImage) errors.image = 'Не коректна адреса зображення!';
+        
 
         const isValid = Object.keys(errors).length === 0;
         if (isValid) {
             this.setState({ isLoading: true });
 
+            e.preventDefault();
+            console.log('----submit form---');
+
             const model = {
                 name: this.state.name,
-                image: this.state.image,
+                image: this.state.imageBase64
             };
-            this.props.createNewAnimal(model);
+            axios.post('https://localhost:44320/api/animal/add-base64', model)
+                .then(
+                    (resp) => {
+                        console.log('--success post--', resp.data);
+                        this.props.history.push('/animal');
+                    },
+                    (err) => {
+                        console.log('--err problem---', err);
+                    }
+                );
 
         } else {
             this.setState({ errors });
         }
     };
 
-    componentWillReceiveProps(newprops) {
-        const { isSuccess, history } = newprops;
-        if (isSuccess) {
-            console.log("isSuccess: ", isSuccess);
-            history.push('/animal');
-        }
-    }
-    errorImage = () => {
-        this.setState({ errorImage: true });
-    };
+    
+    
 
     onChangeInput = e => {
         const { errors } = this.state;
@@ -128,7 +149,7 @@ class AnimalCreateCropperContainer extends Component {
     render() {
         console.log('---AnimalCropperCreate state----', this.state);
         console.log('---AnimalCropperCreate props----', this.props);
-        const { name, image, imageBase64, errors, isLoadingPhoto } = this.state;
+        const { name, imageBase64, errors, isLoadingPhoto } = this.state;
         const { isLoading, isError } = this.props;
         return (
             <React.Fragment>
@@ -139,7 +160,7 @@ class AnimalCreateCropperContainer extends Component {
                             {!!errors.invalid
                                 ? <div className="alert alert-danger">
                                     {errors.invalid}.
-                  </div>
+                </div>
                                 : ''}
                             {isError ?
                                 (<div className="alert alert-danger" style={{ 'margin': '10px' }}>Завантаження  данних невдале!</div>)
@@ -173,7 +194,6 @@ class AnimalCreateCropperContainer extends Component {
                                                     !this.state.isLoadingPhoto ?
                                                         <img
                                                             src={imageBase64}
-                                                            className="img-circle"
                                                             id="image"
                                                             alt=""
                                                             name="image"
@@ -185,19 +205,23 @@ class AnimalCreateCropperContainer extends Component {
                                             </label>
                                         </div>
 
-                                        <div className={!this.state.isLoadingPhoto ? "div-hidden" : "div-visible form-group"} >
+                                        <div className={!isLoadingPhoto ? "div-hidden" : "div-visible form-group"} >
                                             <Cropper
                                                 style={{ height: 400, width: 400, overflow: 'hidden' }}
                                                 aspectRatio={1 / 1}
-                                                rotatable = "true"
                                                 preview=".img-preview"
                                                 guides={false}
                                                 src={this.state.src}
                                                 ref={cropper => { this.cropper = cropper; }}
                                             />
                                             <p></p>
-                                            <button type="button" onClick={this.cropImage} className="btn btn-primary" style={{ marginRight: '5px' }}>Crop Image</button>
-                                            <button type="button" onClick={this.rotareImage} className="btn btn-primary"><i className="fa fa-repeat" aria-hidden="true" /></button>
+                                            <div>
+                                                <button type="button" onClick={this.cropImage} className="btn btn-primary btn-crop" >Crop Image</button>
+                                                <button type="button" onClick={e => this.operationImage(e, 'ZOOM+', 0.1)} className="btn btn-primary  btn-crop"><i className="fa fa-search-plus" aria-hidden="true" /></button>
+                                                <button type="button" onClick={e => this.operationImage(e, 'ZOOM-', -0.1)} className="btn btn-primary  btn-crop"><i className="fa fa-search-minus" aria-hidden="true" /></button>
+                                                <button type="button" onClick={e => this.operationImage(e, 'ROTARE_LEFT', 45)} className="btn btn-primary  btn-crop"><i className="fa fa-repeat" aria-hidden="true" /></button>
+                                                <button type="button" onClick={e => this.operationImage(e, 'ROTARE_RIGHT', 45)} className="btn btn-primary  btn-crop"><i className="fa fa-undo" aria-hidden="true" /></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -214,34 +238,31 @@ class AnimalCreateCropperContainer extends Component {
     }
 }
 
-AnimalCreateCropperContainer.propTypes = {
-    history: propTypes.object.isRequired,
-    createNewAnimal: propTypes.func.isRequired,
-    isError: propTypes.bool.isRequired,
-    isLoading: propTypes.bool.isRequired,
-};
+// AnimalCreateCropperContainer.propTypes = {
+//     history: propTypes.object.isRequired,
+//     isError: propTypes.bool.isRequired,
+//     isLoading: propTypes.bool.isRequired,
+// };
 
 
-const mapState = state => {
-    return {
-        isLoading: get(state, 'animal.loading'),
-        isError: get(state, 'animal.error'),
-        isSuccess: get(state, 'animal.success'),
-    };
-};
+// const mapState = state => {
+//     return {
+//         isLoading: get(state, 'animal.loading'),
+//         isError: get(state, 'animal.error'),
+//         isSuccess: get(state, 'animal.success'),
+//     };
+// };
 
-const mapDispatch = (dispatch) => {
-    return {
-        createNewAnimal: (model) => {
-            dispatch(animalActions.createNewAnimal(model));
+// const mapDispatch = (dispatch) => {
+//     return {
+//         createNewAnimal: (model) => {
+//             dispatch(animalActions.createNewAnimal(model));
 
-        }
-    }
-}
+//         }
+//     }
+// }
 
 
-const AnimalCreateCropperWidget = withRouter(
-    connect(mapState, mapDispatch)(AnimalCreateCropperContainer)
-);
+const AnimalCreateCropperWidget = withRouter(AnimalCreateCropperContainer);
 
 export default AnimalCreateCropperWidget;

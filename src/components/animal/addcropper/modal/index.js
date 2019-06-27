@@ -24,7 +24,7 @@ class CropperWidgetContainer extends Component {
                                 dragMode="move"
                                 preview=".img-preview"
                                 src={src}   
-                                // ref={cropper => { this.cropper = cropper; }}
+                                ref={cropper => { this.cropper = cropper; }}
                             />
                         </div>
                         <div className="col-md-4">
