@@ -6,10 +6,10 @@ import get from 'lodash.get';
 import propTypes from 'prop-types';
 import SpinnerWidget from '../spinner';
 import './inputDes.css'
+import axios from 'axios';
 
 class AnimalWidgetContainer extends Component {
   state = {
-    count: 25,
     message: 37
   };
 
@@ -21,7 +21,7 @@ class AnimalWidgetContainer extends Component {
     const { isSuccess} = newprops;
     if(isSuccess)
     {
-    console.log("isSuccess: ", isSuccess);
+   // console.log("isSuccess: ", isSuccess);
     }
   }
 
@@ -54,10 +54,54 @@ class AnimalWidgetContainer extends Component {
 
   };
 
+  DeleteAnimal=(e)=>{
+   
+
+
+
+  }
+
   ChangeMessage = () => {
     const { message } = this.state;
     this.setState({ message: message + 1 });
   };
+
+  operationAnimal = (e, type, id) => {
+    e.preventDefault();
+
+    switch (type) {
+
+        case 'DELETE_ANIMAL':
+          console.log('Delete animal id: ', id);
+              axios.delete ('https://localhost:44320/api/animal/delete/'+id)
+              .then(
+                  (resp) => {
+                      console.log('--success delete--', resp.data);
+                      this.props.history.push('/animal');
+                  },
+                  (err) => {
+                      console.log('--err problem---', err);
+                  }
+              );
+
+            break;
+        case 'ADD_LIKE':
+          console.log('Add like for animal with  id: ', id);
+          this.props.addLikeAnimal(id);
+            break;
+        case 'ZOOM+':
+            
+            break;
+        case 'ZOOM-':
+            
+            break;
+        default:
+
+    }
+};
+
+
+
 
   render() {
     console.log('----state-----', this.state);
@@ -68,7 +112,10 @@ class AnimalWidgetContainer extends Component {
       return (
         <div key={item.id} className="col-lg-3 col-md-4 col-6" style={{ boxShadow: '0 0 5px 5px', height: '250px', margin: '10px', paddingTop: '10px', borderRadius: '5px' }}>
           <div className="d-block mb-4 h-100 text-center container" >
-          <div className="btn btn-light x" >X</div>
+          {/* <div className="btn btn-light x" >X</div> */}
+          <button type="button" className="close"  aria-label="Close" onClick={e => this.operationAnimal(e, 'DELETE_ANIMAL', item.id)}>
+               <span  aria-hidden="true">&times;</span>
+          </button>
             <img
               className="img-fluid img-thumbnail "
               style={{ height: '150px' }}
@@ -77,7 +124,7 @@ class AnimalWidgetContainer extends Component {
             />
             <p> {item.name} </p>
             <p className="text-center">
-              <button type="button" className="btn btn-outline-info" id={item.id} onClick={this.ChangeCount} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart" id={item.id} aria-hidden="true" />  {item.imageLikeCount} </button>
+              <button type="button" className="btn btn-outline-info" onClick={e => this.operationAnimal(e, 'ADD_LIKE', item.id)} style={{ width: '40%', marginRight: '5px' }}><i className="fa fa-heart"  aria-hidden="true" />  {item.imageLikeCount} </button>
               <button type="button" className="btn btn-outline-success" onClick={this.ChangeMessage} style={{ width: '40%' }} ><i className="fa fa-comment-o" aria-hidden="true" />{this.state.message} </button>
             </p>
           </div>
@@ -90,9 +137,9 @@ class AnimalWidgetContainer extends Component {
       <div>
         <div className="container">
 
-          <button className="btn btn-info" onClick={this.redirectToAnimal} style={{ marginRight: '5px' }}>Додати тварину</button>
-          <button className="btn btn-info" onClick={this.redirectToAnimalCropper}  style={{ marginRight: '5px' }}>Додати фото кропер</button>
-          <button className="btn btn-info" onClick={this.redirectToAnimalCropperMy}>Додати фото кропер мій</button>
+          <button className="btn btn-info" onClick={this.redirectToAnimal} style={{ marginRight: '5px' }} disabled>Додати тварину (попередній варіант)</button>
+          {/* <button className="btn btn-info" onClick={this.redirectToAnimalCropper}  style={{ marginRight: '5px' }} disabled>Додати фото кропер</button>  */}
+          <button className="btn btn-info" onClick={this.redirectToAnimalCropperMy}>Додати тварину</button>
           <h1 className="font-weight-light text-center text-lg-left mt-4 mb-0">
             Галерея тварин
           </h1>

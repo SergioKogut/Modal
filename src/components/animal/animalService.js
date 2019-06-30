@@ -13,4 +13,6 @@ export default class AnimalService {
   static addLikeAnimal (id) {
     return axios.put ('https://localhost:44320/api/animal/addlike/'+id);
   }
+
+  
 }

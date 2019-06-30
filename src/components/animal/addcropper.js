@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-//import { connect } from 'react-redux';
-//import axios from 'axios';
 import classnames from 'classnames';
-//import get from 'lodash.get';
-//import * as animalActions from './reducer';
 import { withRouter } from 'react-router-dom';
-//import propTypes from 'prop-types';
 import SpinnerWidget from '../spinner';
-//import { Row } from 'react-bootstrap'
 import defaultPath from './No_image_available.png'
 import Cropper from 'react-cropper';
 import './inputDes.css'
 import axios from 'axios';
+
+const imageMaxSize = 3000000;
+
+
 
 const FormStyle = {
     margin: '20px',
@@ -59,8 +57,20 @@ class AnimalCreateCropperContainer extends Component {
         reader.onload = () => {
             this.setState({ src: reader.result });
         };
-        reader.readAsDataURL(files[0]);
-        this.setState({ isLoadingPhoto: true });
+
+        const currentFile = files[0];
+        const currentFileSize = currentFile.size;
+        if (currentFileSize>imageMaxSize ){
+            reader.readAsDataURL(currentFile);
+            this.setState({ isLoadingPhoto: true });
+        }
+        else{
+            alert("Фото має бути більше 3Мb");
+
+        };
+
+        
+
     }
     cropImage = () => {
         if (typeof this.cropper.getCroppedCanvas() === 'undefined') {
@@ -85,10 +95,10 @@ class AnimalCreateCropperContainer extends Component {
                 this.cropper.rotate(-value);
                 break;
             case 'ZOOM+':
-                this.cropper.rotate(value);
+                this.cropper.zoom(value);
                 break;
             case 'ZOOM-':
-                this.cropper.rotate(value);
+                this.cropper.zoom(value);
                 break;
             default:
 
@@ -167,7 +177,7 @@ class AnimalCreateCropperContainer extends Component {
                                 (<div className="alert alert-danger" style={{ 'margin': '10px' }}>Завантаження  данних невдале!</div>)
                                 : ''}
 
-                            <h1 className="text-left"> Додати тварину (Cropper)</h1>
+                            <h1 className="text-left"> Додати тварину</h1>
                             <div className="row justify-content-md-left">
                                 <div className="col-sm-16 ">
                                     <div className="form-group">
@@ -228,7 +238,7 @@ class AnimalCreateCropperContainer extends Component {
                                 </div>
                             </div>
                             <div className="text-left">
-                                <button type="submit" className="btn btn-info ">Додати</button>
+                                <button type="submit" className="btn btn-lg btn-info ">Додати</button>
                             </div>
                         </form>
                     </div>
@@ -239,29 +249,6 @@ class AnimalCreateCropperContainer extends Component {
     }
 }
 
-// AnimalCreateCropperContainer.propTypes = {
-//     history: propTypes.object.isRequired,
-//     isError: propTypes.bool.isRequired,
-//     isLoading: propTypes.bool.isRequired,
-// };
-
-
-// const mapState = state => {
-//     return {
-//         isLoading: get(state, 'animal.loading'),
-//         isError: get(state, 'animal.error'),
-//         isSuccess: get(state, 'animal.success'),
-//     };
-// };
-
-// const mapDispatch = (dispatch) => {
-//     return {
-//         createNewAnimal: (model) => {
-//             dispatch(animalActions.createNewAnimal(model));
-
-//         }
-//     }
-// }
 
 
 const AnimalCreateCropperWidget = withRouter(AnimalCreateCropperContainer);
