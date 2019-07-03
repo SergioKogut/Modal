@@ -7,7 +7,7 @@ import Cropper from 'react-cropper';
 import './inputDes.css'
 import axios from 'axios';
 
-const imageMaxSize = 3000000;
+const imageMaxSize = 3000;
 
 
 

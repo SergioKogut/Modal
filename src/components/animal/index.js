@@ -6,7 +6,7 @@ import get from 'lodash.get';
 import propTypes from 'prop-types';
 import SpinnerWidget from '../spinner';
 import './inputDes.css'
-import axios from 'axios';
+//import axios from 'axios';
 
 class AnimalWidgetContainer extends Component {
   state = {
@@ -16,15 +16,7 @@ class AnimalWidgetContainer extends Component {
   componentDidMount() {
     this.props.getListData();
   }
-  
-  componentWillReceiveProps(newprops) {
-    const { isSuccess} = newprops;
-    if(isSuccess)
-    {
-   // console.log("isSuccess: ", isSuccess);
-    }
-  }
-
+ 
   redirectToAnimal = e => {
     const { history } = this.props;
     e.preventDefault();
@@ -46,21 +38,6 @@ class AnimalWidgetContainer extends Component {
     history.push('animal/addcropper');
   };
 
-
-  ChangeCount = (e) => {
-  
-  console.log('ChangeCount : ', e.target.id);
-    this.props.addLikeAnimal(e.target.id);
-
-  };
-
-  DeleteAnimal=(e)=>{
-   
-
-
-
-  }
-
   ChangeMessage = () => {
     const { message } = this.state;
     this.setState({ message: message + 1 });
@@ -73,16 +50,17 @@ class AnimalWidgetContainer extends Component {
 
         case 'DELETE_ANIMAL':
           console.log('Delete animal id: ', id);
-              axios.delete ('https://localhost:44320/api/animal/delete/'+id)
-              .then(
-                  (resp) => {
-                      console.log('--success delete--', resp.data);
-                      this.props.history.push('/animal');
-                  },
-                  (err) => {
-                      console.log('--err problem---', err);
-                  }
-              );
+          this.props.deleteAnimal(id);
+          // axios.delete ('https://localhost:44320/api/animal/delete/'+id)
+          //     .then(
+          //         (resp) => {
+          //             console.log('--success delete--', resp.data);
+          //             this.props.history.push('/animal');
+          //         },
+          //         (err) => {
+          //             console.log('--err problem---', err);
+          //         }
+          //     );
 
             break;
         case 'ADD_LIKE':
@@ -99,8 +77,6 @@ class AnimalWidgetContainer extends Component {
 
     }
 };
-
-
 
 
   render() {
@@ -159,7 +135,7 @@ const mapState = state => {
     list: get(state, 'animal.list.data'),
     isListLoading: get(state, 'animal.list.loading'),
     isListError: get(state, 'animal.list.error'),
-    isSuccess: get(state, 'animal.like.success'),
+   
   };
 };
 const mapDispatch = dispatch => {
@@ -167,7 +143,9 @@ const mapDispatch = dispatch => {
     getListData: () => 
       dispatch(animalActions.getListData()),
     addLikeAnimal: (id) => 
-      dispatch(animalActions.addLikeAnimal(id))
+      dispatch(animalActions.addLikeAnimal(id)),
+    deleteAnimal: (id) => 
+      dispatch(animalActions.deleteAnimal(id)),
   };
 };
 
@@ -176,6 +154,10 @@ AnimalWidgetContainer.propTypes = {
   list: propTypes.array.isRequired,
   isListError: propTypes.bool.isRequired,
   isListLoading: propTypes.bool.isRequired,
+  deleteAnimal:propTypes.func.isRequired,
+  addLikeAnimal:propTypes.func.isRequired,
+  getListData:propTypes.func.isRequired
+
 };
 
 const AnimalWidget = withRouter(

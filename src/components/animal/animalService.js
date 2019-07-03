@@ -14,5 +14,8 @@ export default class AnimalService {
     return axios.put ('https://localhost:44320/api/animal/addlike/'+id);
   }
 
+  static deleteAnimal (id) {
+    return axios.delete ('https://localhost:44320/api/animal/delete/'+id);
+  }
   
 }

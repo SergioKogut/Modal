@@ -1,6 +1,7 @@
 import AnimalService from "./animalService";
 import update from '../../helpers/update'
 
+
 export const GET_LIST_DATA_STARTED = "animal/GET_LIST_DATA_STARTED";
 export const GET_LIST_DATA_SUCCESS = "animal/GET_LIST_DATA_SUCCESS";
 export const GET_LIST_DATA_FAILED = "animal/GET_LIST_DATA_FAILED";
@@ -14,7 +15,9 @@ export const ADD_ANIMAL_LIKE_SUCCESS = "animal/ADD_ANIMAL_LIKE_SUCCESS";
 export const ADD_ANIMAL_LIKE_FAILED = "animal/ADD_ANIMAL_LIKE_FAILED";
 
 
-
+export const DEL_ANIMAL_STARTED = "animal/DEL_ANIMAL_STARTED";
+export const DEL_ANIMAL_SUCCESS = "animal/DEL_ANIMAL_SUCCESS";
+export const DEL_ANIMAL_FAILED = "animal/DEL_ANIMAL_FAILED";
 
 
 const initialState = {
@@ -36,6 +39,11 @@ const initialState = {
         error: false,
         loading: false
     },
+    deleting: {
+        error: false,
+        loading: false,
+        success: false
+    }
 }
 
 export const animalReducer = (state = initialState, action) => {
@@ -81,16 +89,40 @@ export const animalReducer = (state = initialState, action) => {
             newState = update.set(state, 'like.loading', false);
             newState = update.set(newState, 'like.success', true);
             newState = update.set(newState, 'list.data', data);
-            
            
-
             break;
         }
      
+//---------------------------------------------
+
+case DEL_ANIMAL_STARTED : {
+    console.log("deleting Start");
+    newState = update.set(state, 'deleting.loading', true);
+    newState = update.set(newState, 'deleting.success', false);
+    break;
+}
+case DEL_ANIMAL_FAILED: {
+    newState = update.set(state, 'deleting.loading', false);
+    newState = update.set(newState, 'deleting.error', true);
+    break;
+}
+case DEL_ANIMAL_SUCCESS: {
+    let list = state.list.filter(item => item.id !== action.payload.data)
+    newState = update.set(state, 'deleting.loading', false);
+    newState = update.set(newState, 'deleting.success', true);
+    newState = update.set(newState, 'list', list);
+   
+    break;
+}
+
+
+//---------------------------------------------
+
+
 
         case GET_LIST_DATA_STARTED: {
             newState = update.set(state, 'list.loading', true);
-            newState = update.set(newState, 'like.success', false);
+            newState = update.set(newState, 'list.success', false);
             break;
         }
         case GET_LIST_DATA_SUCCESS: {
@@ -162,31 +194,45 @@ export const getListData = () => {
 }
 
 
+export const deleteAnimal = (model) => {
+    return (dispatch) => {
+        dispatch(delAnimalActions.started());
+
+        AnimalService.deleteAnimal(model)
+            .then((response) => {
+                console.log('--success delete--', response.data);
+                var animalId = response.data;
+                dispatch(delAnimalActions.success(animalId));
+            })
+            .catch(() => {
+                console.log('--failed--');
+                dispatch(delAnimalActions.failed());
+            });
+    }
+}
 
 
 
-
-export const createAnimalActions = {
+export const delAnimalActions = {
     started: () => {
         return {
-            type: CREATE_ANIMAL_STARTED
+            type: DEL_ANIMAL_STARTED 
         }
     },
 
     success: (data) => {
         return {
-            type: CREATE_ANIMAL_SUCCESS,
+            type: DEL_ANIMAL_SUCCESS,
             payload: data
         }
     },
 
     failed: (error) => {
         return {
-            type: CREATE_ANIMAL_FAILED
+            type: DEL_ANIMAL_FAILED
         }
     }
 }
-
 
 
 
@@ -213,6 +259,10 @@ export const getListActions = {
     }
 }
 
+
+
+
+
 export const addLikeAnimalActions = {
     started: () => {
         return {
@@ -233,3 +283,31 @@ export const addLikeAnimalActions = {
         }
     }
 }
+
+
+//-------------------------------------------------------------------
+
+
+export const createAnimalActions = {
+    started: () => {
+        return {
+            type: CREATE_ANIMAL_STARTED
+        }
+    },
+
+    success: (data) => {
+        return {
+            type: CREATE_ANIMAL_SUCCESS,
+            payload: data
+        }
+    },
+
+    failed: (error) => {
+        return {
+            type: CREATE_ANIMAL_FAILED
+        }
+    }
+}
+
+
+
