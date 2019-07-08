@@ -269,6 +269,7 @@ AnimalCreateCropperContainer.propTypes = {
     createNewGirl:propTypes.func.isRequired,
     isError: propTypes.bool.isRequired,
     isLoading: propTypes.bool.isRequired,
+    isSuccess: propTypes.bool.isRequired,
   };
   
   
