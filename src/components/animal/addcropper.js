@@ -5,7 +5,11 @@ import SpinnerWidget from '../spinner';
 import defaultPath from './No_image_available.png'
 import Cropper from 'react-cropper';
 import './inputDes.css'
-import axios from 'axios';
+//import axios from 'axios';
+import propTypes from 'prop-types';
+import get from 'lodash.get';
+import * as girlActions from './girlReducer';
+import {connect} from 'react-redux';
 
 const imageMaxSize = 3000;
 
@@ -33,6 +37,16 @@ class AnimalCreateCropperContainer extends Component {
         this.cropImage = this.cropImage.bind(this);
         this.changeInput = this.changeInput.bind(this);
     }
+
+    componentWillReceiveProps(newprops) {
+        const { isSuccess, history} = newprops;
+        if(isSuccess)
+        {
+        console.log("isSuccess: ", isSuccess);
+        history.push('/animal');
+        }
+      }
+
     setStateByErrors = (name, value) => {
         if (!!this.state.errors[name]) {
             let errors = Object.assign({}, this.state.errors);
@@ -123,16 +137,17 @@ class AnimalCreateCropperContainer extends Component {
                 name: this.state.name,
                 image: this.state.imageBase64
             };
-            axios.post('https://localhost:44320/api/animal/add-base64', model)
-                .then(
-                    (resp) => {
-                        console.log('--success post--', resp.data);
-                        this.props.history.push('/animal');
-                    },
-                    (err) => {
-                        console.log('--err problem---', err);
-                    }
-                );
+                this.props.createNewGirl(model);
+            // axios.post('https://localhost:44320/api/animal/add-base64', model)
+            //     .then(
+            //         (resp) => {
+            //             console.log('--success post--', resp.data);
+            //             this.props.history.push('/animal');
+            //         },
+            //         (err) => {
+            //             console.log('--err problem---', err);
+            //         }
+            //     );
 
         } else {
             this.setState({ errors });
@@ -249,8 +264,32 @@ class AnimalCreateCropperContainer extends Component {
     }
 }
 
+AnimalCreateCropperContainer.propTypes = {
+    history: propTypes.object.isRequired,
+    createNewGirl:propTypes.func.isRequired,
+    isError: propTypes.bool.isRequired,
+    isLoading: propTypes.bool.isRequired,
+  };
+  
+  
+  const mapState = state => {
+    return {
+      isLoading: get(state, 'girl.create.loading'),
+      isError: get(state, 'girl.create.error'),
+      isSuccess: get(state, 'girl.create.success'),
+    };
+  };
+  
+  const mapDispatch = (dispatch) => {
+    return {
+        createNewGirl: (model) => {
+            dispatch(girlActions.createNewGirl(model));
+            
+        }
+    }
+  }
 
-
-const AnimalCreateCropperWidget = withRouter(AnimalCreateCropperContainer);
+  
+const AnimalCreateCropperWidget = withRouter(connect (mapState, mapDispatch)(AnimalCreateCropperContainer));
 
 export default AnimalCreateCropperWidget;

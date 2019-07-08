@@ -18,4 +18,8 @@ export default class AnimalService {
     return axios.delete ('https://localhost:44320/api/animal/delete/'+id);
   }
   
+  static createNewGirl (model) {
+    return axios.post ('https://localhost:44320/api/animal/add-base64', model);
+  }
+
 }

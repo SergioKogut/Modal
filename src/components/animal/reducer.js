@@ -81,7 +81,7 @@ export const animalReducer = (state = initialState, action) => {
         }
         case ADD_ANIMAL_LIKE_SUCCESS: {
             let data=state.list.data.map(item => {
-                if (item.id === action.payload.data) 
+                if (item.id === action.payload) 
                     return update.set(item, 'imageLikeCount', item.imageLikeCount+1);      
                  return item;
                 });
@@ -107,10 +107,10 @@ case DEL_ANIMAL_FAILED: {
     break;
 }
 case DEL_ANIMAL_SUCCESS: {
-    let list = state.list.filter(item => item.id !== action.payload.data)
+    let data=state.list.data.filter(item => item.id !== action.payload);
     newState = update.set(state, 'deleting.loading', false);
     newState = update.set(newState, 'deleting.success', true);
-    newState = update.set(newState, 'list', list);
+    newState = update.set(newState, 'list.data', data);
    
     break;
 }
@@ -167,7 +167,8 @@ export const addLikeAnimal = (model) => {
         AnimalService.addLikeAnimal(model)
             .then((response) => {
                 console.log('--success put--', response.data);
-                dispatch(addLikeAnimalActions.success(response));
+                var animalId = response.data;
+                dispatch(addLikeAnimalActions.success(animalId));
             })
             .catch(() => {
                 console.log('--failed--');
