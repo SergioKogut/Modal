@@ -1,10 +1,14 @@
 import { createAction, createReducer } from 'redux-starter-kit';
 import AnimalService from "./animalService";
-import update from '../../helpers/update'
+//import update from '../../helpers/update'
 
+import {put,takeEvery,takeLatest,call} from 'redux-saga/effects';
 export const createGirlStarted = createAction('girl/create_Girl_Started');
 export const createGirlSuccess = createAction('girl/create_Girl_Success');
 export const createGirlFailed = createAction('girl/create_Girl_Failed');
+
+//Action saga
+export const createGirlSaga = createAction('create_Girl_Saga');
 
 const initialState = {
     like: {
@@ -18,6 +22,32 @@ const initialState = {
         success: false
     }
 };
+
+//saga
+export  function* watchCreateGirl() {
+  yield takeLatest(createGirlSaga,createGirlAsync);
+ }
+
+//  function* createGirlAsync() {
+//     yield put(console.log('Hello Sagas!'));
+//  }
+
+ function* createGirlAsync(model) {
+    try {
+        yield put(createGirlStarted());
+        const data = yield call((model) => {
+          return  AnimalService.createNewGirl(model)
+          .then((response) => {
+              console.log('--success create--', response.data)
+           ;})
+          }
+        );
+        yield put(createGirlSuccess(data));
+      } catch (error) {
+        yield put(createGirlFailed());
+      }
+ }
+
 
 export const girlReducer = createReducer(initialState, {
 
