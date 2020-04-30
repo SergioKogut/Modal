@@ -9,7 +9,7 @@
     "event-emitter": "^0.3.5",
     "font-awesome": "^4.7.0",
     "immutability-helper": "^3.0.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "keymirror": "^0.1.1",
     "lodash.get": "^4.4.2",
     "normalize.css": "^8.0.1",
